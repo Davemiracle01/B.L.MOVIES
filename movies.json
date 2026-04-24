@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Example Movie 1",
+    "url": "https://your-storage.com/videos/movie1.mp4"
+  },
+  {
+    "title": "Example Movie 2",
+    "url": "https://your-storage.com/videos/movie2.mp4"
+  }
+]

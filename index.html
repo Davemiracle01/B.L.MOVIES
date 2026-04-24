@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>B.L. MOVIES SITE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --red:#e50000;
+      --red-dark:#8b0000;
+      --red-glow:rgba(229,0,0,0.45);
+      --black:#050505;
+      --deep:#0a0a0a;
+      --surface:#111111;
+      --surface2:#181818;
+      --border:rgba(229,0,0,0.2);
+      --text:#f0f0f0;
+      --muted:#666;
+      --white:#ffffff;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--black);
+      color:var(--text);
+      font-family:'Montserrat',sans-serif;
+      min-height:100vh;
+      overflow-x:hidden;
+      cursor:default;
+    }
+
+    /* ── Scanline texture ── */
+    body::after{
+      content:'';position:fixed;inset:0;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+      pointer-events:none;z-index:9000;
+    }
+
+    /* ════════════════════ HEADER ════════════════════ */
+    header{
+      position:relative;
+      padding:0;
+      overflow:hidden;
+      border-bottom:1px solid var(--border);
+    }
+    .header-bg{
+      position:absolute;inset:0;
+      background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(180,0,0,0.18) 0%,transparent 70%);
+    }
+    .header-inner{
+      position:relative;z-index:2;
+      display:flex;flex-direction:column;align-items:center;
+      padding:56px 24px 40px;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--red);
+      color:var(--red);
+      font-size:9px;letter-spacing:0.4em;text-transform:uppercase;font-weight:700;
+      padding:5px 14px;border-radius:2px;margin-bottom:22px;
+      animation:pulseBorder 2.5s ease-in-out infinite;
+    }
+    @keyframes pulseBorder{
+      0%,100%{box-shadow:0 0 0 0 rgba(229,0,0,0)}
+      50%{box-shadow:0 0 12px 2px rgba(229,0,0,0.3)}
+    }
+    h1{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(3rem,9vw,7rem);
+      letter-spacing:0.06em;
+      color:var(--white);
+      text-shadow:0 0 60px var(--red-glow),0 0 120px rgba(229,0,0,0.15);
+      line-height:1;
+      text-align:center;
+    }
+    h1 span{color:var(--red);}
+    .tagline{
+      margin-top:14px;
+      font-size:11px;letter-spacing:0.35em;text-transform:uppercase;
+      color:var(--muted);font-weight:300;
+    }
+    .divider{
+      width:100%;height:1px;margin-top:36px;
+      background:linear-gradient(90deg,transparent,var(--red),transparent);
+    }
+
+    /* ── Search ── */
+    .search-bar{
+      position:relative;z-index:2;
+      max-width:560px;width:100%;margin:0 auto;
+      padding:0 24px 40px;
+    }
+    .search-wrap{
+      position:relative;
+      display:flex;align-items:center;
+    }
+    .search-wrap input{
+      width:100%;
+      background:var(--surface);
+      border:1px solid var(--border);
+      color:var(--text);
+      font-family:'Montserrat',sans-serif;
+      font-size:14px;letter-spacing:0.05em;
+      padding:14px 50px 14px 20px;
+      border-radius:3px;
+      outline:none;
+      transition:border-color .25s,box-shadow .25s;
+    }
+    .search-wrap input:focus{
+      border-color:var(--red);
+      box-shadow:0 0 0 3px rgba(229,0,0,0.12);
+    }
+    .search-wrap input::placeholder{color:var(--muted)}
+    .search-icon{
+      position:absolute;right:16px;
+      color:var(--muted);font-size:16px;pointer-events:none;
+    }
+
+    /* ════════════════════ MAIN ════════════════════ */
+    main{max-width:1440px;margin:0 auto;padding:10px 24px 100px;}
+
+    .section-label{
+      font-size:10px;letter-spacing:0.4em;text-transform:uppercase;
+      color:var(--red);font-weight:700;margin-bottom:24px;
+      display:flex;align-items:center;gap:12px;
+    }
+    .section-label::after{
+      content:'';flex:1;height:1px;
+      background:linear-gradient(90deg,var(--border),transparent);
+    }
+
+    /* ── Skeleton ── */
+    .skeletons{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:20px;
+    }
+    .skeleton{
+      background:var(--surface);border-radius:4px;overflow:hidden;
+      animation:shimmer 1.4s ease infinite;
+    }
+    .skeleton-thumb{height:180px;background:var(--surface2);}
+    .skeleton-line{height:12px;margin:14px 16px 0;border-radius:2px;background:var(--surface2);}
+    .skeleton-line.short{width:60%;margin-bottom:16px;}
+    @keyframes shimmer{
+      0%,100%{opacity:1}50%{opacity:0.5}
+    }
+
+    /* ── Gallery grid ── */
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:20px;
+    }
+
+    /* ── Movie card ── */
+    .card{
+      background:var(--surface);
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:4px;overflow:hidden;
+      cursor:pointer;
+      position:relative;
+      transition:transform .25s ease,box-shadow .25s ease,border-color .25s;
+      animation:fadeUp .4s ease both;
+    }
+    .card:hover{
+      transform:translateY(-6px) scale(1.01);
+      box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 0 1px var(--red),0 0 30px rgba(229,0,0,0.12);
+      border-color:var(--red);
+    }
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(20px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .card-thumb{
+      position:relative;width:100%;padding-top:56.25%;/* 16:9 */
+      background:#0d0d0d;overflow:hidden;
+    }
+    .card-thumb video{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;
+      transition:transform .4s ease;
+    }
+    .card:hover .card-thumb video{transform:scale(1.05)}
+
+    .play-overlay{
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,0.3);
+      opacity:0;transition:opacity .25s;
+    }
+    .card:hover .play-overlay{opacity:1}
+    .play-btn{
+      width:56px;height:56px;border-radius:50%;
+      background:var(--red);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 0 30px rgba(229,0,0,0.6);
+      transition:transform .2s;
+    }
+    .card:hover .play-btn{transform:scale(1.1)}
+    .play-btn svg{width:20px;height:20px;fill:#fff;margin-left:3px}
+
+    .card-info{
+      padding:14px 16px 16px;
+      border-top:1px solid rgba(255,255,255,0.04);
+    }
+    .card-title{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:1rem;letter-spacing:0.08em;
+      color:var(--text);white-space:nowrap;
+      overflow:hidden;text-overflow:ellipsis;
+    }
+    .card-meta{
+      font-size:10px;letter-spacing:0.12em;text-transform:uppercase;
+      color:var(--red);margin-top:4px;font-weight:600;
+    }
+
+    /* ── Empty state ── */
+    #empty{
+      text-align:center;padding:80px 24px;display:none;
+    }
+    #empty .empty-icon{font-size:3rem;margin-bottom:16px;opacity:0.4}
+    #empty p{color:var(--muted);font-size:13px;letter-spacing:0.06em;line-height:1.8}
+    #empty code{
+      display:inline-block;margin-top:10px;
+      background:var(--surface);border:1px solid var(--border);
+      color:var(--red);font-size:11px;padding:6px 14px;border-radius:3px;letter-spacing:0.05em;
+    }
+
+    /* ════════════════════ MODAL PLAYER ════════════════════ */
+    #modal{
+      position:fixed;inset:0;z-index:8000;
+      display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,0.95);
+      animation:modalIn .2s ease both;
+    }
+    #modal.open{display:flex}
+    @keyframes modalIn{from{opacity:0}to{opacity:1}}
+
+    .modal-inner{
+      position:relative;width:95vw;max-width:1100px;
+      background:var(--deep);
+      border:1px solid var(--border);
+      border-radius:4px;overflow:hidden;
+      box-shadow:0 0 100px rgba(229,0,0,0.15);
+    }
+    .modal-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 20px;border-bottom:1px solid var(--border);
+      background:var(--surface);
+    }
+    #modal-title{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:1.1rem;letter-spacing:0.1em;color:var(--text);
+    }
+    #modal-close{
+      background:none;border:none;
+      color:var(--muted);font-size:20px;cursor:pointer;
+      width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+      border-radius:3px;transition:background .2s,color .2s;
+    }
+    #modal-close:hover{background:var(--red);color:#fff}
+    #modal-video{width:100%;display:block;max-height:75vh;background:#000}
+
+    /* ════════════════════ FLOATING ADS ════════════════════ */
+    .ad{
+      position:fixed;z-index:7000;
+      width:270px;
+      background:linear-gradient(145deg,#0e0000,#1a0000);
+      border:1px solid var(--red);
+      border-radius:4px;
+      padding:16px 18px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.9),0 0 20px rgba(229,0,0,0.15);
+      cursor:pointer;
+      transition:opacity .35s ease,transform .2s ease;
+    }
+    #ad1{bottom:24px;right:20px;animation:floatA 5s ease-in-out infinite}
+    #ad2{bottom:24px;left:20px;animation:floatB 5s ease-in-out infinite}
+    @keyframes floatA{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes floatB{0%,100%{transform:translateY(-4px)}50%{transform:translateY(3px)}}
+    .ad:hover{animation-play-state:paused;transform:scale(1.02)}
+
+    .ad-dismiss{
+      font-size:8px;letter-spacing:0.3em;text-transform:uppercase;
+      color:rgba(255,255,255,0.25);text-align:right;margin-bottom:8px;
+    }
+    .ad-tag{
+      display:inline-block;background:var(--red);
+      font-size:8px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;
+      color:#fff;padding:2px 8px;border-radius:2px;margin-bottom:10px;
+    }
+    .ad-name{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:1.05rem;letter-spacing:0.08em;color:#fff;
+      margin-bottom:4px;line-height:1.2;
+    }
+    .ad-sub{
+      font-size:10px;color:rgba(255,255,255,0.4);
+      letter-spacing:0.06em;margin-bottom:14px;font-weight:300;
+    }
+    .ad-btn{
+      display:block;text-align:center;text-decoration:none;
+      padding:9px 12px;border-radius:3px;
+      font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+      margin-bottom:7px;
+      transition:filter .2s,transform .15s;
+    }
+    .ad-btn:last-child{margin-bottom:0}
+    .ad-btn:hover{filter:brightness(1.2);transform:scale(1.02)}
+    .ad-btn.wa{background:#25D366;color:#000}
+    .ad-btn.group{background:var(--red);color:#fff}
+    .ad-btn.premium{background:linear-gradient(90deg,#6b0000,#e50000);color:#fff}
+
+    /* ════════════════════ FOOTER ════════════════════ */
+    footer{
+      text-align:center;padding:24px;
+      border-top:1px solid var(--border);
+      font-size:10px;letter-spacing:0.25em;
+      text-transform:uppercase;color:var(--muted);
+    }
+
+    /* ════════════════════ RESPONSIVE ════════════════════ */
+    @media(max-width:600px){
+      #ad2{display:none}
+      .ad{width:240px;right:12px;left:auto}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════ HEADER ════ -->
+<header>
+  <div class="header-bg"></div>
+  <div class="header-inner">
+    <div class="badge">🎬 &nbsp; Now Streaming &nbsp; 🎬</div>
+    <h1>B.L. <span>MOVIES</span> SITE</h1>
+    <p class="tagline">Exclusive &nbsp;·&nbsp; Premium &nbsp;·&nbsp; Unfiltered</p>
+    <div class="divider"></div>
+  </div>
+  <div class="search-bar">
+    <div class="search-wrap">
+      <input type="text" id="search" placeholder="Search movies…" autocomplete="off"/>
+      <span class="search-icon">⌕</span>
+    </div>
+  </div>
+</header>
+
+<!-- ════ MAIN ════ -->
+<main>
+  <div class="section-label">All Movies</div>
+
+  <!-- Skeleton loaders -->
+  <div class="skeletons" id="skeletons">
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+    <div class="skeleton"><div class="skeleton-thumb"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty">
+    <div class="empty-icon">🎬</div>
+    <p>No movies found.<br>Add your MP4 files to <code>public/videos/</code><br>or list them in <code>movies.json</code></p>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery" id="gallery"></div>
+</main>
+
+<footer>© B.L. MOVIES SITE — All Rights Reserved</footer>
+
+<!-- ════ MODAL PLAYER ════ -->
+<div id="modal">
+  <div class="modal-inner">
+    <div class="modal-header">
+      <span id="modal-title">—</span>
+      <button id="modal-close" title="Close">✕</button>
+    </div>
+    <video id="modal-video" controls></video>
+  </div>
+</div>
+
+<!-- ════ FLOATING ADS ════ -->
+<div class="ad" id="ad1" onclick="dismissAd('ad1')">
+  <div class="ad-dismiss">✕ tap to close</div>
+  <div class="ad-tag">Join Now</div>
+  <div class="ad-name">B.L.MOVIES 👑👑👑</div>
+  <div class="ad-sub">142 members &nbsp;·&nbsp; 4 Admins</div>
+  <a class="ad-btn wa" href="https://wa.me/923276576690" target="_blank" onclick="event.stopPropagation()">💬 DM No.1 Mod on WhatsApp</a>
+  <a class="ad-btn group" href="https://chat.whatsapp.com/HfJwbgH4e8XH35LoEpSvoG" target="_blank" onclick="event.stopPropagation()">🔗 Join B.L.MOVIES Group</a>
+</div>
+
+<div class="ad" id="ad2" onclick="dismissAd('ad2')">
+  <div class="ad-dismiss">✕ tap to close</div>
+  <div class="ad-tag">Premium</div>
+  <div class="ad-name">B.L. MOVIES PREMIUM</div>
+  <div class="ad-sub">Exclusive access &nbsp;·&nbsp; Limited members</div>
+  <a class="ad-btn wa" href="https://wa.me/923276576690" target="_blank" onclick="event.stopPropagation()">💬 DM No.1 Mod on WhatsApp</a>
+  <a class="ad-btn premium" href="https://chat.whatsapp.com/Df783InhVsD5Cd3S07Kgob" target="_blank" onclick="event.stopPropagation()">🔗 Join PREMIUM Group</a>
+</div>
+
+<script>
+  /* ── Load movies ── */
+  let allMovies = [];
+
+  async function loadMovies(){
+    try{
+      const r = await fetch('/api/movies');
+      if(!r.ok) throw new Error('API error');
+      allMovies = await r.json();
+    } catch(e){
+      // Fallback: parse directory listing (Apache/Nginx autoindex)
+      try{
+        const r2 = await fetch('/videos/');
+        const html = await r2.text();
+        const doc = new DOMParser().parseFromString(html,'text/html');
+        allMovies = [...doc.querySelectorAll('a[href]')]
+          .map(a => a.getAttribute('href'))
+          .filter(h => h && /\.mp4$/i.test(h) && !h.startsWith('/') && !h.startsWith('?') && !h.startsWith('http'))
+          .map(href => ({
+            // href from directory listings is already URL-encoded by the server
+            url: '/videos/' + href,
+            title: cleanTitle(href)
+          }));
+      } catch(e2){ allMovies = []; }
+    }
+    renderGallery(allMovies);
+  }
+
+  function cleanTitle(raw){
+    // Works regardless of encoding, special chars, or weird filenames
+    try { raw = decodeURIComponent(raw); } catch(e){}
+    return raw
+      .split('/').pop()          // strip path
+      .replace(/\.mp4$/i,'')     // strip extension
+      .replace(/[-_.+]/g,' ')    // dashes/underscores → spaces
+      .replace(/\s{2,}/g,' ')    // collapse spaces
+      .trim() || 'Untitled';
+  }
+
+  function renderGallery(movies){
+    const skelEl = document.getElementById('skeletons');
+    if(skelEl) skelEl.remove();
+    const gallery = document.getElementById('gallery');
+    const empty   = document.getElementById('empty');
+    gallery.innerHTML='';
+
+    if(!movies.length){ empty.style.display='block'; return; }
+    empty.style.display='none';
+
+    movies.forEach((m,i)=>{
+      const title = m.title ? m.title : cleanTitle(m.url);
+
+      const card = document.createElement('div');
+      card.className='card';
+      card.style.animationDelay=`${i*0.06}s`;
+
+      // Build card HTML - video src set via JS so we control encoding properly
+      card.innerHTML=`
+        <div class="card-thumb">
+          <video muted preload="metadata" tabindex="-1" playsinline></video>
+          <div class="play-overlay">
+            <div class="play-btn">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-title">${escapeHtml(title.toUpperCase())}</div>
+          <div class="card-meta">B.L. Exclusive &nbsp;▸&nbsp; Play Now</div>
+        </div>`;
+
+      // Set src via JS — avoids any HTML-encoding issues with special chars in URL
+      const vid = card.querySelector('video');
+      vid.src = m.url; // URL is already properly encoded from the API
+
+      // Seek to 1s for a real thumbnail frame — more reliable than #t= fragment
+      vid.addEventListener('loadedmetadata', ()=>{
+        vid.currentTime = Math.min(1, vid.duration * 0.1);
+      }, {once: true});
+
+      card.addEventListener('click',()=>openModal(m.url, title));
+      gallery.appendChild(card);
+    });
+  }
+
+  // Prevent XSS from filenames
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── Search ── */
+  document.getElementById('search').addEventListener('input',function(){
+    const q = this.value.toLowerCase().trim();
+    const filtered = q ? allMovies.filter(m=>(m.title||m.url).toLowerCase().includes(q)) : allMovies;
+    renderGallery(filtered);
+  });
+
+  /* ── Modal ── */
+  function openModal(url, title){
+    const modal = document.getElementById('modal');
+    const vid   = document.getElementById('modal-video');
+    document.getElementById('modal-title').textContent = title.toUpperCase();
+    // Set src as JS property — handles any encoded characters safely
+    vid.src = url;
+    modal.classList.add('open');
+    vid.play().catch(()=>{});
+  }
+  function closeModal(){
+    const modal = document.getElementById('modal');
+    const vid   = document.getElementById('modal-video');
+    vid.pause(); vid.src='';
+    modal.classList.remove('open');
+  }
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal').addEventListener('click', e=>{
+    if(e.target === document.getElementById('modal')) closeModal();
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+  /* ── Ads ── */
+  function dismissAd(id){
+    const el = document.getElementById(id);
+    el.style.opacity='0'; el.style.transform='translateY(20px) scale(0.95)';
+    setTimeout(()=>el.remove(), 400);
+  }
+
+  loadMovies();
+</script>
+</body>
+</html>
