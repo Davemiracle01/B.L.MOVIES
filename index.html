@@ -15,9 +15,12 @@
       --deep:#0a0a0a;
       --surface:#111111;
       --surface2:#181818;
+      --surface3:#1f1f1f;
       --border:rgba(229,0,0,0.2);
+      --border2:rgba(255,255,255,0.06);
       --text:#f0f0f0;
       --muted:#666;
+      --muted2:#444;
       --white:#ffffff;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -86,15 +89,18 @@
       background:linear-gradient(90deg,transparent,var(--red),transparent);
     }
 
-    /* ── Search ── */
-    .search-bar{
+    /* ── Search + filters ── */
+    .controls-bar{
       position:relative;z-index:2;
-      max-width:560px;width:100%;margin:0 auto;
+      max-width:760px;width:100%;margin:0 auto;
       padding:0 24px 40px;
+      display:flex;flex-direction:column;gap:14px;
+      align-items:center;
     }
     .search-wrap{
       position:relative;
       display:flex;align-items:center;
+      width:100%;
     }
     .search-wrap input{
       width:100%;
@@ -118,8 +124,44 @@
       color:var(--muted);font-size:16px;pointer-events:none;
     }
 
+    /* Sort row */
+    .sort-row{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;
+    }
+    .sort-label{
+      font-size:9px;letter-spacing:0.35em;text-transform:uppercase;
+      color:var(--muted);font-weight:600;
+    }
+    .sort-btn{
+      background:var(--surface);border:1px solid var(--border2);
+      color:var(--muted);font-family:'Montserrat',sans-serif;
+      font-size:9px;letter-spacing:0.25em;text-transform:uppercase;font-weight:600;
+      padding:6px 14px;border-radius:2px;cursor:pointer;
+      transition:border-color .2s,color .2s,background .2s;
+    }
+    .sort-btn:hover,.sort-btn.active{
+      border-color:var(--red);color:var(--red);background:rgba(229,0,0,0.07);
+    }
+
+    /* Stats strip */
+    .stats-strip{
+      display:flex;gap:28px;justify-content:center;flex-wrap:wrap;
+      padding:0 24px 20px;
+      position:relative;z-index:2;
+    }
+    .stat{
+      display:flex;flex-direction:column;align-items:center;gap:2px;
+    }
+    .stat-val{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:1.5rem;letter-spacing:0.1em;color:var(--red);
+    }
+    .stat-key{
+      font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);
+    }
+
     /* ════════════════════ MAIN ════════════════════ */
-    main{max-width:1440px;margin:0 auto;padding:10px 24px 100px;}
+    main{max-width:1440px;margin:0 auto;padding:10px 24px 120px;}
 
     .section-label{
       font-size:10px;letter-spacing:0.4em;text-transform:uppercase;
@@ -129,6 +171,9 @@
     .section-label::after{
       content:'';flex:1;height:1px;
       background:linear-gradient(90deg,var(--border),transparent);
+    }
+    .section-label .count{
+      color:var(--muted);font-size:9px;letter-spacing:0.2em;
     }
 
     /* ── Skeleton ── */
@@ -175,6 +220,16 @@
       to{opacity:1;transform:translateY(0)}
     }
 
+    .card-num{
+      position:absolute;top:10px;left:10px;z-index:2;
+      font-family:'Bebas Neue',sans-serif;
+      font-size:11px;letter-spacing:0.15em;
+      color:rgba(255,255,255,0.5);
+      background:rgba(0,0,0,0.6);
+      padding:2px 8px;border-radius:2px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
     .card-thumb{
       position:relative;width:100%;padding-top:56.25%;/* 16:9 */
       background:#0d0d0d;overflow:hidden;
@@ -218,6 +273,30 @@
       color:var(--red);margin-top:4px;font-weight:600;
     }
 
+    /* ── Pagination ── */
+    .pagination{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      margin-top:48px;flex-wrap:wrap;
+    }
+    .page-btn{
+      background:var(--surface);border:1px solid var(--border2);
+      color:var(--muted);font-family:'Montserrat',sans-serif;
+      font-size:11px;letter-spacing:0.1em;font-weight:600;
+      padding:8px 16px;border-radius:3px;cursor:pointer;
+      transition:all .2s;min-width:40px;text-align:center;
+    }
+    .page-btn:hover:not(:disabled){
+      border-color:var(--red);color:var(--red);background:rgba(229,0,0,0.07);
+    }
+    .page-btn.active{
+      background:var(--red);border-color:var(--red);color:#fff;
+    }
+    .page-btn:disabled{opacity:0.3;cursor:not-allowed;}
+    .page-info{
+      font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+      color:var(--muted);padding:0 8px;
+    }
+
     /* ── Empty state ── */
     #empty{
       text-align:center;padding:80px 24px;display:none;
@@ -249,21 +328,127 @@
     }
     .modal-header{
       display:flex;align-items:center;justify-content:space-between;
-      padding:14px 20px;border-bottom:1px solid var(--border);
+      padding:12px 16px;border-bottom:1px solid var(--border);
       background:var(--surface);
+      gap:12px;
+    }
+    .modal-nav-group{
+      display:flex;align-items:center;gap:8px;flex-shrink:0;
+    }
+    .modal-nav-btn{
+      background:var(--surface2);border:1px solid var(--border2);
+      color:var(--muted);font-size:14px;cursor:pointer;
+      width:34px;height:34px;border-radius:3px;
+      display:flex;align-items:center;justify-content:center;
+      transition:background .2s,color .2s,border-color .2s;
+      flex-shrink:0;
+    }
+    .modal-nav-btn:hover:not(:disabled){
+      background:var(--red);color:#fff;border-color:var(--red);
+    }
+    .modal-nav-btn:disabled{opacity:0.25;cursor:not-allowed;}
+    .modal-title-wrap{
+      flex:1;min-width:0;
+      display:flex;flex-direction:column;align-items:center;gap:2px;
     }
     #modal-title{
       font-family:'Bebas Neue',sans-serif;
-      font-size:1.1rem;letter-spacing:0.1em;color:var(--text);
+      font-size:1.05rem;letter-spacing:0.1em;color:var(--text);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      max-width:100%;
+    }
+    #modal-counter{
+      font-size:9px;letter-spacing:0.25em;text-transform:uppercase;
+      color:var(--muted);
     }
     #modal-close{
       background:none;border:none;
       color:var(--muted);font-size:20px;cursor:pointer;
-      width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+      width:34px;height:34px;display:flex;align-items:center;justify-content:center;
       border-radius:3px;transition:background .2s,color .2s;
+      flex-shrink:0;
     }
     #modal-close:hover{background:var(--red);color:#fff}
-    #modal-video{width:100%;display:block;max-height:75vh;background:#000}
+
+    /* Progress bar */
+    .video-progress-wrap{
+      position:relative;
+      background:var(--surface2);
+      height:3px;cursor:pointer;
+    }
+    .video-progress-wrap:hover{height:6px;transition:height .15s;}
+    #video-progress{
+      height:100%;background:var(--red);
+      width:0%;transition:width .1s linear;
+      pointer-events:none;
+    }
+    .video-progress-wrap:hover #video-progress{
+      box-shadow:0 0 8px var(--red-glow);
+    }
+
+    #modal-video{width:100%;display:block;max-height:72vh;background:#000}
+
+    /* Video controls bar */
+    .video-controls{
+      display:flex;align-items:center;gap:12px;
+      padding:10px 16px;
+      background:var(--surface);
+      border-top:1px solid var(--border);
+      flex-wrap:wrap;
+    }
+    .vc-btn{
+      background:none;border:none;color:var(--muted);
+      font-size:16px;cursor:pointer;padding:4px;
+      border-radius:3px;transition:color .2s,background .2s;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .vc-btn:hover{color:var(--white);background:rgba(255,255,255,0.07);}
+    .vc-time{
+      font-size:10px;letter-spacing:0.1em;color:var(--muted);
+      font-weight:600;white-space:nowrap;
+    }
+    .vc-spacer{flex:1;}
+    .vc-volume{
+      display:flex;align-items:center;gap:8px;
+    }
+    .vc-volume input[type=range]{
+      width:70px;height:3px;
+      accent-color:var(--red);cursor:pointer;
+    }
+    .speed-select{
+      background:var(--surface2);border:1px solid var(--border2);
+      color:var(--muted);font-family:'Montserrat',sans-serif;
+      font-size:9px;letter-spacing:0.15em;
+      padding:4px 8px;border-radius:3px;cursor:pointer;outline:none;
+    }
+    .speed-select:focus{border-color:var(--red);}
+
+    /* Keyboard hint */
+    .kb-hint{
+      display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+      padding:6px 16px 8px;background:var(--deep);
+      border-top:1px solid rgba(255,255,255,0.03);
+    }
+    .kb-key{
+      font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted2);
+    }
+    .kb-key kbd{
+      display:inline-block;background:var(--surface2);
+      border:1px solid var(--border2);border-radius:2px;
+      padding:1px 5px;font-family:'Montserrat',sans-serif;
+      font-size:8px;color:var(--muted);margin-right:3px;
+    }
+
+    /* ════════════════════ TOAST ════════════════════ */
+    #toast{
+      position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+      background:var(--surface);border:1px solid var(--border);
+      color:var(--text);font-size:11px;letter-spacing:0.1em;
+      padding:10px 20px;border-radius:3px;
+      opacity:0;transition:opacity .3s,transform .3s;
+      z-index:9999;pointer-events:none;white-space:nowrap;
+    }
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
     /* ════════════════════ FLOATING ADS ════════════════════ */
     .ad{
@@ -326,6 +511,13 @@
     @media(max-width:600px){
       #ad2{display:none}
       .ad{width:240px;right:12px;left:auto}
+      .kb-hint{display:none}
+      .vc-volume input[type=range]{width:50px}
+    }
+    @media(max-width:480px){
+      .modal-header{padding:10px 12px;}
+      #modal-title{font-size:.9rem}
+      .video-controls{gap:8px;padding:8px 12px;}
     }
   </style>
 </head>
@@ -340,17 +532,33 @@
     <p class="tagline">Exclusive &nbsp;·&nbsp; Premium &nbsp;·&nbsp; Unfiltered</p>
     <div class="divider"></div>
   </div>
-  <div class="search-bar">
+
+  <div class="controls-bar">
     <div class="search-wrap">
       <input type="text" id="search" placeholder="Search movies…" autocomplete="off"/>
       <span class="search-icon">⌕</span>
     </div>
+    <div class="sort-row">
+      <span class="sort-label">Sort:</span>
+      <button class="sort-btn active" data-sort="default">Default</button>
+      <button class="sort-btn" data-sort="az">A → Z</button>
+      <button class="sort-btn" data-sort="za">Z → A</button>
+    </div>
+  </div>
+
+  <div class="stats-strip" id="stats-strip" style="display:none">
+    <div class="stat"><span class="stat-val" id="stat-total">0</span><span class="stat-key">Movies</span></div>
+    <div class="stat"><span class="stat-val" id="stat-showing">0</span><span class="stat-key">Showing</span></div>
+    <div class="stat"><span class="stat-val" id="stat-page">1</span><span class="stat-key">Page</span></div>
   </div>
 </header>
 
 <!-- ════ MAIN ════ -->
 <main>
-  <div class="section-label">All Movies</div>
+  <div class="section-label">
+    All Movies
+    <span class="count" id="count-label"></span>
+  </div>
 
   <!-- Skeleton loaders -->
   <div class="skeletons" id="skeletons">
@@ -370,6 +578,9 @@
 
   <!-- Gallery -->
   <div class="gallery" id="gallery"></div>
+
+  <!-- Pagination -->
+  <div class="pagination" id="pagination"></div>
 </main>
 
 <footer>© B.L. MOVIES SITE — All Rights Reserved</footer>
@@ -377,13 +588,65 @@
 <!-- ════ MODAL PLAYER ════ -->
 <div id="modal">
   <div class="modal-inner">
+
+    <!-- Header: prev | title+counter | next | close -->
     <div class="modal-header">
-      <span id="modal-title">—</span>
-      <button id="modal-close" title="Close">✕</button>
+      <div class="modal-nav-group">
+        <button class="modal-nav-btn" id="modal-prev" title="Previous (←)">&#8592;</button>
+        <button class="modal-nav-btn" id="modal-next" title="Next (→)">&#8594;</button>
+      </div>
+      <div class="modal-title-wrap">
+        <span id="modal-title">—</span>
+        <span id="modal-counter"></span>
+      </div>
+      <button id="modal-close" title="Close (Esc)">✕</button>
     </div>
-    <video id="modal-video" controls></video>
+
+    <!-- Video -->
+    <video id="modal-video" controls playsinline></video>
+
+    <!-- Seekable progress bar -->
+    <div class="video-progress-wrap" id="progress-wrap" title="Click to seek">
+      <div id="video-progress"></div>
+    </div>
+
+    <!-- Custom controls row -->
+    <div class="video-controls">
+      <button class="vc-btn" id="vc-play" title="Play/Pause (Space)">▶</button>
+      <button class="vc-btn" id="vc-back" title="−10s (J)">⟪</button>
+      <button class="vc-btn" id="vc-fwd"  title="+10s (L)">⟫</button>
+      <span class="vc-time" id="vc-time">0:00 / 0:00</span>
+      <div class="vc-spacer"></div>
+      <div class="vc-volume">
+        <button class="vc-btn" id="vc-mute" title="Mute (M)">🔊</button>
+        <input type="range" id="vc-vol" min="0" max="1" step="0.05" value="1"/>
+      </div>
+      <select class="speed-select" id="vc-speed" title="Playback speed">
+        <option value="0.5">0.5×</option>
+        <option value="0.75">0.75×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.25">1.25×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+      <button class="vc-btn" id="vc-fullscreen" title="Fullscreen (F)">⛶</button>
+    </div>
+
+    <!-- Keyboard shortcut hint -->
+    <div class="kb-hint">
+      <span class="kb-key"><kbd>Space</kbd>Play</span>
+      <span class="kb-key"><kbd>←</kbd><kbd>→</kbd>Prev / Next</span>
+      <span class="kb-key"><kbd>J</kbd><kbd>L</kbd>−10s / +10s</span>
+      <span class="kb-key"><kbd>M</kbd>Mute</span>
+      <span class="kb-key"><kbd>F</kbd>Fullscreen</span>
+      <span class="kb-key"><kbd>Esc</kbd>Close</span>
+    </div>
+
   </div>
 </div>
+
+<!-- ════ TOAST ════ -->
+<div id="toast"></div>
 
 <!-- ════ FLOATING ADS ════ -->
 <div class="ad" id="ad1" onclick="dismissAd('ad1')">
@@ -405,132 +668,366 @@
 </div>
 
 <script>
-  /* ── Load movies ── */
-  let allMovies = [];
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let allMovies   = [];   // full list from API
+let filtered    = [];   // after search/sort
+let currentSort = 'default';
+let currentIdx  = -1;   // index in filtered[] currently playing
 
-  async function loadMovies(){
+const PAGE_SIZE = 24;
+let currentPage = 1;
+
+/* ══════════════════════════════════════════
+   LOAD
+══════════════════════════════════════════ */
+async function loadMovies(){
+  try{
+    const r = await fetch('/api/movies');
+    if(!r.ok) throw new Error('API error');
+    allMovies = await r.json();
+  } catch(e){
     try{
-      const r = await fetch('/api/movies');
-      if(!r.ok) throw new Error('API error');
-      allMovies = await r.json();
-    } catch(e){
-      // Fallback: parse directory listing (Apache/Nginx autoindex)
-      try{
-        const r2 = await fetch('/videos/');
-        const html = await r2.text();
-        const doc = new DOMParser().parseFromString(html,'text/html');
-        allMovies = [...doc.querySelectorAll('a[href]')]
-          .map(a => a.getAttribute('href'))
-          .filter(h => h && /\.mp4$/i.test(h) && !h.startsWith('/') && !h.startsWith('?') && !h.startsWith('http'))
-          .map(href => ({
-            // href from directory listings is already URL-encoded by the server
-            url: '/videos/' + href,
-            title: cleanTitle(href)
-          }));
-      } catch(e2){ allMovies = []; }
-    }
-    renderGallery(allMovies);
+      const r2 = await fetch('/videos/');
+      const html = await r2.text();
+      const doc  = new DOMParser().parseFromString(html,'text/html');
+      allMovies  = [...doc.querySelectorAll('a[href]')]
+        .map(a => a.getAttribute('href'))
+        .filter(h => h && /\.mp4$/i.test(h) && !h.startsWith('/') && !h.startsWith('?') && !h.startsWith('http'))
+        .map(href => ({ url:'/videos/'+href, title:cleanTitle(href) }));
+    } catch(e2){ allMovies = []; }
   }
+  filtered = [...allMovies];
+  applyFilters();
+  updateStats();
+}
 
-  function cleanTitle(raw){
-    // Works regardless of encoding, special chars, or weird filenames
-    try { raw = decodeURIComponent(raw); } catch(e){}
-    return raw
-      .split('/').pop()          // strip path
-      .replace(/\.mp4$/i,'')     // strip extension
-      .replace(/[-_.+]/g,' ')    // dashes/underscores → spaces
-      .replace(/\s{2,}/g,' ')    // collapse spaces
-      .trim() || 'Untitled';
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function cleanTitle(raw){
+  try{ raw = decodeURIComponent(raw); }catch(e){}
+  return raw.split('/').pop().replace(/\.mp4$/i,'').replace(/[-_.+]/g,' ').replace(/\s{2,}/g,' ').trim() || 'Untitled';
+}
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtTime(s){
+  if(!isFinite(s)||s<0) return '0:00';
+  const m=Math.floor(s/60), sec=Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+function showToast(msg, dur=1800){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+/* ══════════════════════════════════════════
+   FILTERS & SORT
+══════════════════════════════════════════ */
+function applyFilters(){
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  filtered = allMovies.filter(m => (m.title||m.url).toLowerCase().includes(q||''));
+  if(currentSort==='az') filtered.sort((a,b)=>(a.title||'').localeCompare(b.title||''));
+  if(currentSort==='za') filtered.sort((a,b)=>(b.title||'').localeCompare(a.title||''));
+  currentPage = 1;
+  renderGallery();
+  updateStats();
+}
+
+document.getElementById('search').addEventListener('input', applyFilters);
+
+document.querySelectorAll('.sort-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentSort = btn.dataset.sort;
+    applyFilters();
+  });
+});
+
+function updateStats(){
+  const strip = document.getElementById('stats-strip');
+  if(allMovies.length){
+    strip.style.display='flex';
+    document.getElementById('stat-total').textContent   = allMovies.length;
+    document.getElementById('stat-showing').textContent = filtered.length;
+    document.getElementById('stat-page').textContent    = currentPage+'/'+Math.max(1,Math.ceil(filtered.length/PAGE_SIZE));
   }
+}
 
-  function renderGallery(movies){
-    const skelEl = document.getElementById('skeletons');
-    if(skelEl) skelEl.remove();
-    const gallery = document.getElementById('gallery');
-    const empty   = document.getElementById('empty');
-    gallery.innerHTML='';
+/* ══════════════════════════════════════════
+   RENDER GALLERY
+══════════════════════════════════════════ */
+function renderGallery(){
+  const skelEl  = document.getElementById('skeletons');
+  if(skelEl) skelEl.remove();
+  const gallery = document.getElementById('gallery');
+  const empty   = document.getElementById('empty');
+  const countLbl= document.getElementById('count-label');
+  gallery.innerHTML='';
 
-    if(!movies.length){ empty.style.display='block'; return; }
-    empty.style.display='none';
+  if(!filtered.length){
+    empty.style.display='block';
+    countLbl.textContent='';
+    renderPagination();
+    return;
+  }
+  empty.style.display='none';
 
-    movies.forEach((m,i)=>{
-      const title = m.title ? m.title : cleanTitle(m.url);
+  const totalPages = Math.ceil(filtered.length/PAGE_SIZE);
+  const start = (currentPage-1)*PAGE_SIZE;
+  const pageMovies = filtered.slice(start, start+PAGE_SIZE);
 
-      const card = document.createElement('div');
-      card.className='card';
-      card.style.animationDelay=`${i*0.06}s`;
+  countLbl.textContent = filtered.length < allMovies.length
+    ? `${filtered.length} of ${allMovies.length}`
+    : `${allMovies.length} total`;
 
-      // Build card HTML - video src set via JS so we control encoding properly
-      card.innerHTML=`
-        <div class="card-thumb">
-          <video muted preload="metadata" tabindex="-1" playsinline></video>
-          <div class="play-overlay">
-            <div class="play-btn">
-              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </div>
+  pageMovies.forEach((m, i)=>{
+    const globalIdx = start + i; // index in filtered[]
+    const title = m.title ? m.title : cleanTitle(m.url);
+    const card  = document.createElement('div');
+    card.className='card';
+    card.style.animationDelay=`${i*0.05}s`;
+    card.innerHTML=`
+      <div class="card-num">#${globalIdx+1}</div>
+      <div class="card-thumb">
+        <video muted preload="metadata" tabindex="-1" playsinline></video>
+        <div class="play-overlay">
+          <div class="play-btn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
           </div>
         </div>
-        <div class="card-info">
-          <div class="card-title">${escapeHtml(title.toUpperCase())}</div>
-          <div class="card-meta">B.L. Exclusive &nbsp;▸&nbsp; Play Now</div>
-        </div>`;
+      </div>
+      <div class="card-info">
+        <div class="card-title">${escapeHtml(title.toUpperCase())}</div>
+        <div class="card-meta">B.L. Exclusive &nbsp;▸&nbsp; Play Now</div>
+      </div>`;
 
-      // Set src via JS — avoids any HTML-encoding issues with special chars in URL
-      const vid = card.querySelector('video');
-      vid.src = m.url; // URL is already properly encoded from the API
+    const vid = card.querySelector('video');
+    vid.src = m.url;
+    vid.addEventListener('loadedmetadata',()=>{
+      vid.currentTime = Math.min(1, vid.duration * 0.1);
+    },{once:true});
 
-      // Seek to 1s for a real thumbnail frame — more reliable than #t= fragment
-      vid.addEventListener('loadedmetadata', ()=>{
-        vid.currentTime = Math.min(1, vid.duration * 0.1);
-      }, {once: true});
-
-      card.addEventListener('click',()=>openModal(m.url, title));
-      gallery.appendChild(card);
-    });
-  }
-
-  // Prevent XSS from filenames
-  function escapeHtml(s){
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  /* ── Search ── */
-  document.getElementById('search').addEventListener('input',function(){
-    const q = this.value.toLowerCase().trim();
-    const filtered = q ? allMovies.filter(m=>(m.title||m.url).toLowerCase().includes(q)) : allMovies;
-    renderGallery(filtered);
+    card.addEventListener('click',()=>openModal(globalIdx));
+    gallery.appendChild(card);
   });
 
-  /* ── Modal ── */
-  function openModal(url, title){
-    const modal = document.getElementById('modal');
-    const vid   = document.getElementById('modal-video');
-    document.getElementById('modal-title').textContent = title.toUpperCase();
-    // Set src as JS property — handles any encoded characters safely
-    vid.src = url;
-    modal.classList.add('open');
-    vid.play().catch(()=>{});
-  }
-  function closeModal(){
-    const modal = document.getElementById('modal');
-    const vid   = document.getElementById('modal-video');
-    vid.pause(); vid.src='';
-    modal.classList.remove('open');
-  }
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('modal').addEventListener('click', e=>{
-    if(e.target === document.getElementById('modal')) closeModal();
+  renderPagination();
+  updateStats();
+}
+
+/* ══════════════════════════════════════════
+   PAGINATION
+══════════════════════════════════════════ */
+function renderPagination(){
+  const total = Math.ceil(filtered.length/PAGE_SIZE);
+  const pg    = document.getElementById('pagination');
+  pg.innerHTML='';
+  if(total<=1) return;
+
+  const prev = document.createElement('button');
+  prev.className='page-btn'; prev.textContent='← Prev';
+  prev.disabled = currentPage===1;
+  prev.onclick = ()=>{ currentPage--; renderGallery(); window.scrollTo({top:0,behavior:'smooth'}); };
+  pg.appendChild(prev);
+
+  // page number buttons (max 7 shown)
+  const range = pageRange(currentPage, total);
+  range.forEach(p=>{
+    const btn = document.createElement('button');
+    btn.className='page-btn'+(p===currentPage?' active':'');
+    btn.textContent = p==='…'?'…':p;
+    if(p!=='…'){
+      btn.onclick=()=>{ currentPage=p; renderGallery(); window.scrollTo({top:0,behavior:'smooth'}); };
+    } else {
+      btn.disabled=true;
+    }
+    pg.appendChild(btn);
   });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
-  /* ── Ads ── */
-  function dismissAd(id){
-    const el = document.getElementById(id);
-    el.style.opacity='0'; el.style.transform='translateY(20px) scale(0.95)';
-    setTimeout(()=>el.remove(), 400);
+  const next = document.createElement('button');
+  next.className='page-btn'; next.textContent='Next →';
+  next.disabled = currentPage===total;
+  next.onclick = ()=>{ currentPage++; renderGallery(); window.scrollTo({top:0,behavior:'smooth'}); };
+  pg.appendChild(next);
+}
+
+function pageRange(cur, total){
+  if(total<=7) return Array.from({length:total},(_,i)=>i+1);
+  const pages=[];
+  pages.push(1);
+  if(cur>3) pages.push('…');
+  for(let p=Math.max(2,cur-1);p<=Math.min(total-1,cur+1);p++) pages.push(p);
+  if(cur<total-2) pages.push('…');
+  pages.push(total);
+  return pages;
+}
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+function openModal(idx){
+  if(idx<0||idx>=filtered.length) return;
+  currentIdx = idx;
+  const m     = filtered[idx];
+  const title = m.title ? m.title : cleanTitle(m.url);
+  const vid   = document.getElementById('modal-video');
+
+  document.getElementById('modal-title').textContent   = title.toUpperCase();
+  document.getElementById('modal-counter').textContent = `${idx+1} / ${filtered.length}`;
+  document.getElementById('modal-prev').disabled = idx===0;
+  document.getElementById('modal-next').disabled = idx===filtered.length-1;
+
+  vid.src = m.url;
+  document.getElementById('modal').classList.add('open');
+  vid.play().catch(()=>{});
+  resetProgress();
+}
+
+function closeModal(){
+  const vid = document.getElementById('modal-video');
+  vid.pause(); vid.src='';
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('video-progress').style.width='0%';
+  document.getElementById('vc-time').textContent='0:00 / 0:00';
+  document.getElementById('vc-play').textContent='▶';
+  currentIdx=-1;
+}
+
+function goNext(){ if(currentIdx<filtered.length-1) openModal(currentIdx+1); }
+function goPrev(){ if(currentIdx>0) openModal(currentIdx-1); }
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-prev').addEventListener('click', goPrev);
+document.getElementById('modal-next').addEventListener('click', goNext);
+document.getElementById('modal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('modal')) closeModal();
+});
+
+/* ══════════════════════════════════════════
+   VIDEO CONTROLS
+══════════════════════════════════════════ */
+const vid = document.getElementById('modal-video');
+
+function resetProgress(){
+  document.getElementById('video-progress').style.width='0%';
+  document.getElementById('vc-time').textContent='0:00 / 0:00';
+}
+
+vid.addEventListener('timeupdate',()=>{
+  if(!vid.duration) return;
+  const pct = (vid.currentTime/vid.duration)*100;
+  document.getElementById('video-progress').style.width=pct+'%';
+  document.getElementById('vc-time').textContent=fmtTime(vid.currentTime)+' / '+fmtTime(vid.duration);
+});
+
+vid.addEventListener('play', ()=>{ document.getElementById('vc-play').textContent='⏸'; });
+vid.addEventListener('pause',()=>{ document.getElementById('vc-play').textContent='▶'; });
+vid.addEventListener('ended',()=>{
+  document.getElementById('vc-play').textContent='▶';
+  // Auto-advance to next
+  if(currentIdx < filtered.length-1){
+    showToast('▶ Playing next…');
+    setTimeout(()=>goNext(), 800);
   }
+});
 
-  loadMovies();
+// Seekable progress bar
+document.getElementById('progress-wrap').addEventListener('click',e=>{
+  if(!vid.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct  = (e.clientX-rect.left)/rect.width;
+  vid.currentTime = pct * vid.duration;
+});
+
+// Play/pause button
+document.getElementById('vc-play').addEventListener('click',()=>{
+  vid.paused ? vid.play() : vid.pause();
+});
+
+// Skip buttons
+document.getElementById('vc-back').addEventListener('click',()=>{
+  vid.currentTime = Math.max(0,vid.currentTime-10);
+  showToast('⟪ −10s');
+});
+document.getElementById('vc-fwd').addEventListener('click',()=>{
+  vid.currentTime = Math.min(vid.duration||0,vid.currentTime+10);
+  showToast('⟫ +10s');
+});
+
+// Volume
+document.getElementById('vc-vol').addEventListener('input',e=>{
+  vid.volume=e.target.value;
+  vid.muted=vid.volume===0;
+  updateMuteIcon();
+});
+document.getElementById('vc-mute').addEventListener('click',()=>{
+  vid.muted=!vid.muted;
+  updateMuteIcon();
+});
+function updateMuteIcon(){
+  document.getElementById('vc-mute').textContent = (vid.muted||vid.volume===0) ? '🔇' : '🔊';
+}
+
+// Speed
+document.getElementById('vc-speed').addEventListener('change',e=>{
+  vid.playbackRate=parseFloat(e.target.value);
+  showToast('Speed: '+e.target.value+'×');
+});
+
+// Fullscreen
+document.getElementById('vc-fullscreen').addEventListener('click',()=>{
+  const wrap = document.querySelector('.modal-inner');
+  if(document.fullscreenElement) document.exitFullscreen();
+  else wrap.requestFullscreen().catch(()=>vid.requestFullscreen().catch(()=>{}));
+});
+
+/* ══════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+══════════════════════════════════════════ */
+document.addEventListener('keydown', e=>{
+  const modalOpen = document.getElementById('modal').classList.contains('open');
+  if(!modalOpen) return;
+
+  // Don't steal input from selects
+  if(e.target.tagName==='SELECT'||e.target.tagName==='INPUT') return;
+
+  switch(e.key){
+    case 'Escape':  closeModal(); break;
+    case 'ArrowRight': e.preventDefault(); goNext(); break;
+    case 'ArrowLeft':  e.preventDefault(); goPrev(); break;
+    case ' ':
+      e.preventDefault();
+      vid.paused ? vid.play() : vid.pause();
+      break;
+    case 'j': case 'J':
+      vid.currentTime=Math.max(0,vid.currentTime-10);
+      showToast('⟪ −10s'); break;
+    case 'l': case 'L':
+      vid.currentTime=Math.min(vid.duration||0,vid.currentTime+10);
+      showToast('⟫ +10s'); break;
+    case 'm': case 'M':
+      vid.muted=!vid.muted; updateMuteIcon(); break;
+    case 'f': case 'F':
+      document.getElementById('vc-fullscreen').click(); break;
+  }
+});
+
+/* ══════════════════════════════════════════
+   ADS
+══════════════════════════════════════════ */
+function dismissAd(id){
+  const el=document.getElementById(id);
+  el.style.opacity='0'; el.style.transform='translateY(20px) scale(0.95)';
+  setTimeout(()=>el.remove(), 400);
+}
+
+loadMovies();
 </script>
 </body>
 </html>
