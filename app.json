@@ -1,0 +1,11 @@
+{
+  "name": "BL Movies",
+  "description": "BL Movies streaming site",
+  "repository": "https://github.com/Davemiracle01/B.L.MOVIES",
+  "keywords": ["node", "express"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
